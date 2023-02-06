@@ -1,8 +1,8 @@
 My talks with the materials and links.
 
 * **A quick introduction to MicroPython**
-  <P>2023 FOSDEM Brussels
-  (same title, updated content)
+  2023 FOSDEM Brussels
+  (updated content)
   [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython)
   [event](https://fosdem.org/2023/schedule/event/python_micropython_intro/)
 
@@ -13,7 +13,9 @@ My talks with the materials and links.
   
 * online!  
   
-* 2019 ACCU Bristol: Better embedded library interfaces with modern C++
+* **Better embedded library interfaces with modern C++**
+
+  2019 ACCU Bristol: 
   [youtube](https://www.youtube.com/watch?v=ArRuPzN7JXs) 
    
 * 2019 Meeting Embedded Berlin (with Jorn Bunk): We stopped teaching C
