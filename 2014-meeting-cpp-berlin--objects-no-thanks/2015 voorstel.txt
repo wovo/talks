@@ -1,0 +1,9 @@
+C++ on small micro-controllers
+
+Small micro-controllers are a small :) but important subset of embedded systems.
+The traditional programming language for programming small micro-controllers is C, but C++ has much to offer beyond C in abstraction power, compile-time computation, and compile-time checks.
+But constrained resources and real-time requirements make the art of programming a small microcontroller 
+significantly different from programming a larger system like a desktop PC.
+This talk highlights these differences and shows the consequences for the usability of C++ language features, library features, and programming practices,
+leading to the conclusion that C++ can be a valuable tool for programming small micro-controllers,
+but this is not the full C++ as you would use it on a larger system.
