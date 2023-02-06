@@ -1,7 +1,7 @@
 My talks with the materials and links.
 
 * **A quick introduction to MicroPython**
-  2023 FOSDEM Brussels
+  <P>2023 FOSDEM Brussels
   (same title, updated content)
   [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython)
   [event](https://fosdem.org/2023/schedule/event/python_micropython_intro/)
