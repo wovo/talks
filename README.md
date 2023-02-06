@@ -14,7 +14,7 @@ Talks with the same title can have updated content.
 * **C++/Rust: Learning from Each Other** -
   (online, with Lotte Steenbrink) -
   [2021 MUC++](https://www.meetup.com/mucplusplus/events/281231257/) -
-  (sheets lost?) -
+  (sheets lost) -
   [youtube](https://www.youtube.com/watch?v=0SHkxoCWfXU)
   
 * **Better embedded library interfaces with modern C++** -
@@ -31,7 +31,7 @@ Talks with the same title can have updated content.
   (with Jorn Bunk) -
   2018 Meeting Embedded Berlin -
   [material](./2018-meeting-embedded-berlin--we-stopped-teaching-c) -  
-  [youtube](https://www.youtube.com/watch?v=VZUTJ2UNXxI) -
+  [youtube](https://www.youtube.com/watch?v=VZUTJ2UNXxI)
    
 * **10 degrees + 10 degrees or WTF is a torsor?** -
    2018-07-25 Dutch C++ group @ blender -
