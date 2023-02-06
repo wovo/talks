@@ -1,0 +1,165 @@
+# ===========================================================================
+#
+# file     : gf_polygon.py
+# part of  : godafoss micropython library
+# url      : https://www.github.com/wovo/godafoss
+# author   : Wouter van Ooijen (wouter@voti.nl) 2023
+# license  : MIT license, see license variable in the __init__.py
+#
+# This file is part of the Godafoss perhiperal interface library.
+#
+# This file contains the ellipse class
+#
+# ===========================================================================
+
+from godafoss.gf_xy import *
+from godafoss.gf_color import *
+from godafoss.gf_shape import *
+
+             
+# ===========================================================================
+  
+class polygon( shape ):    
+
+    def __init__( 
+        self, 
+        horizontal_radius: int, 
+        vertical_radius: int, 
+        fill = False
+    ):
+        self._horizontal_radius = horizontal_radius
+        self._vertical_radius = vertical_radius
+        self._fill = fill
+        shape.__init__( self )
+        
+    def draw_implementation( 
+        self, 
+        canvas: canvas,
+        offset: xy, 
+        ink: color 
+    ):    
+        if filled:
+            self.draw_filled( canvas, offset, ink )       
+        else:
+            self.draw_open( canvas, offset, ink )       
+
+    def _draw_filled(
+        self, 
+        canvas: canvas,
+        offset: xy, 
+        ink: color 
+    ):    
+    def fill_polygon(self, sides, x0, y0, r, color, rotate=0):
+        """Draw a filled n-sided regular polygon.
+
+        Args:
+            sides (int): Number of polygon sides.
+            x0, y0 (int): Coordinates of center point.
+            r (int): Radius.
+            color (int): RGB565 color value.
+            rotate (Optional float): Rotation in degrees relative to origin.
+        Note:
+            The center point is the center of the x0,y0 pixel.
+            Since pixels are not divisible, the radius is integer rounded
+            up to complete on a full pixel.  Therefore diameter = 2 x r + 1.
+        """
+        # Determine side coordinates
+        coords = []
+        theta = radians(rotate)
+        n = sides + 1
+        for s in range(n):
+            t = 2.0 * pi * s / sides + theta
+            coords.append([int(r * cos(t) + x0), int(r * sin(t) + y0)])
+        # Starting point
+        x1, y1 = coords[0]
+        # Minimum Maximum X dict
+        xdict = {y1: [x1, x1]}
+        # Iterate through coordinates
+        for row in coords[1:]:
+            x2, y2 = row
+            xprev, yprev = x2, y2
+            # Calculate perimeter
+            # Check for horizontal side
+            if y1 == y2:
+                if x1 > x2:
+                    x1, x2 = x2, x1
+                if y1 in xdict:
+                    xdict[y1] = [min(x1, xdict[y1][0]), max(x2, xdict[y1][1])]
+                else:
+                    xdict[y1] = [x1, x2]
+                x1, y1 = xprev, yprev
+                continue
+            # Non horizontal side
+            # Changes in x, y
+            dx = x2 - x1
+            dy = y2 - y1
+            # Determine how steep the line is
+            is_steep = abs(dy) > abs(dx)
+            # Rotate line
+            if is_steep:
+                x1, y1 = y1, x1
+                x2, y2 = y2, x2
+            # Swap start and end points if necessary
+            if x1 > x2:
+                x1, x2 = x2, x1
+                y1, y2 = y2, y1
+            # Recalculate differentials
+            dx = x2 - x1
+            dy = y2 - y1
+            # Calculate error
+            error = dx >> 1
+            ystep = 1 if y1 < y2 else -1
+            y = y1
+            # Calcualte minimum and maximum x values
+            for x in range(x1, x2 + 1):
+                if is_steep:
+                    if x in xdict:
+                        xdict[x] = [min(y, xdict[x][0]), max(y, xdict[x][1])]
+                    else:
+                        xdict[x] = [y, y]
+                else:
+                    if y in xdict:
+                        xdict[y] = [min(x, xdict[y][0]), max(x, xdict[y][1])]
+                    else:
+                        xdict[y] = [x, x]
+                error -= abs(dy)
+                if error < 0:
+                    y += ystep
+                    error += dx
+            x1, y1 = xprev, yprev
+        # Fill polygon
+        for y, x in xdict.items():
+            self.hline(x[0], y, x[1] - x[0] + 2, color)
+    
+    def _draw_open( 
+        self, 
+        canvas: canvas,
+        offset: xy, 
+        ink: color 
+    ):       
+    def polygon(self, sides, x0, y0, r, color, rotate=0):
+        """Draw an n-sided regular polygon.
+
+        Args:
+            sides (int): Number of polygon sides.
+            x0, y0 (int): Coordinates of center point.
+            r (int): Radius.
+            color (int): RGB565 color value.
+            rotate (Optional float): Rotation in degrees relative to origin.
+        Note:
+            The center point is the center of the x0,y0 pixel.
+            Since pixels are not divisible, the radius is integer rounded
+            up to complete on a full pixel.  Therefore diameter = 2 x r + 1.
+        """
+        coords = []
+        theta = radians(rotate)
+        n = sides + 1
+        for s in range(n):
+            t = 2.0 * pi * s / sides + theta
+            coords.append([int(r * cos(t) + x0), int(r * sin(t) + y0)])
+
+        # Cast to python float first to fix rounding errors
+        self.lines(coords, color=color)
+            
+              
+# ===========================================================================

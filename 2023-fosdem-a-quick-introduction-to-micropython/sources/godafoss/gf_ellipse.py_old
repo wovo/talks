@@ -1,0 +1,154 @@
+# ===========================================================================
+#
+# file     : gf_ellipse.py
+# part of  : godafoss micropython library
+# url      : https://www.github.com/wovo/godafoss
+# author   : Wouter van Ooijen (wouter@voti.nl) 2023
+# license  : MIT license, see license variable in the __init__.py
+#
+# This file is part of the Godafoss perhiperal interface library.
+#
+# This file contains the ellipse class
+#
+# ===========================================================================
+
+from godafoss.gf_xy import *
+from godafoss.gf_color import *
+from godafoss.gf_shape import *
+
+             
+# ===========================================================================
+  
+class ellipse( shape ):    
+
+    def __init__( 
+        self, 
+        horizontal_radius: int, 
+        vertical_radius: int, 
+        fill = False
+    ):
+        self._horizontal_radius = horizontal_radius
+        self._vertical_radius = vertical_radius
+        self._fill = fill
+        shape.__init__( self )
+        
+    def draw_implementation( 
+        self, 
+        canvas: canvas,
+        offset: xy, 
+        ink: color 
+    ):    
+        if filled:
+            self.draw_filled( canvas, offset, ink )       
+        else:
+            self.draw_open( canvas, offset, ink )       
+
+    def _draw_filled(
+        self, 
+        canvas: canvas,
+        offset: xy, 
+        ink: color 
+    ):    
+        a = self._horizontal_radius
+        b = self._vertical_radius    
+    
+        a2 = a * a
+        b2 = b * b
+        twoa2 = a2 + a2
+        twob2 = b2 + b2
+        x = 0
+        y = b
+        px = 0
+        py = twoa2 * y
+        
+        # Plot initial points
+        line( xy( x0, y0 - y, x0, y0 + y, ink )
+        
+        # Region 1
+        p = round(b2 - (a2 * b) + (0.25 * a2))
+        while px < py:
+            x += 1
+            px += twob2
+            if p < 0:
+                p += b2 + px
+            else:
+                y -= 1
+                py -= twoa2
+                p += b2 + px - py
+            line( xy( x0 + x, y0 - y, x0 + x, y0 + y, ink )
+            line( xy( x0 - x, y0 - y, x0 - x, y0 + y, ink )
+            
+        # Region 2
+        p = round(b2 * (x + 0.5) * (x + 0.5) +
+                  a2 * (y - 1) * (y - 1) - a2 * b2)
+        while y > 0:
+            y -= 1
+            py -= twoa2
+            if p > 0:
+                p += a2 - py
+            else:
+                x += 1
+                px += twob2
+                p += a2 - py + px
+            line( xy( x0 + x, y0 - y, x0 + x, y0 + y, ink )
+            line( xy( x0 - x, y0 - y, x0 - x, y0 + y, ink )        
+    
+    def _draw_open( 
+        self, 
+        canvas: canvas,
+        offset: xy, 
+        ink: color 
+    ):       
+        a = self._horizontal_radius
+        b = self._vertical_radius
+        
+        a2 = a * a
+        b2 = b * b
+        twoa2 = a2 + a2
+        twob2 = b2 + b2
+        x = 0
+        y = b
+        px = 0
+        py = twoa2 * y
+        
+        # Plot initial points
+        canvas.draw_pixel( offset + xy(   x,   y ), ink )
+        canvas.draw_pixel( offset + xy( - x,   y ), ink )
+        canvas.draw_pixel( offset + xy(   x, - y ), ink )
+        canvas.draw_pixel( offset + xy( - x, - y ), ink )
+        
+        # Region 1
+        p = round(b2 - (a2 * b) + (0.25 * a2))
+        while px < py:
+            x += 1
+            px += twob2
+            if p < 0:
+                p += b2 + px
+            else:
+                y -= 1
+                py -= twoa2
+                p += b2 + px - py
+            canvas.draw_pixel( offset + xy(   x,   y ), ink )
+            canvas.draw_pixel( offset + xy( - x,   y ), ink )
+            canvas.draw_pixel( offset + xy(   x, - y ), ink )
+            canvas.draw_pixel( offset + xy( - x, - y ), ink )
+            
+        # Region 2
+        p = round(b2 * (x + 0.5) * (x + 0.5) +
+                  a2 * (y - 1) * (y - 1) - a2 * b2)
+        while y > 0:
+            y -= 1
+            py -= twoa2
+            if p > 0:
+                p += a2 - py
+            else:
+                x += 1
+                px += twob2
+                p += a2 - py + px
+            canvas.draw_pixel( offset + xy(   x,   y ), ink )
+            canvas.draw_pixel( offset + xy( - x,   y ), ink )
+            canvas.draw_pixel( offset + xy(   x, - y ), ink )
+            canvas.draw_pixel( offset + xy( - x, - y ), ink )
+            
+              
+# ===========================================================================

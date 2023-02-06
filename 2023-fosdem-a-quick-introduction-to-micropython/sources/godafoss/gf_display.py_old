@@ -1,0 +1,252 @@
+# ===========================================================================
+#
+# file     : gf_display.py
+# part of  : godafoss micropython library
+# url      : https://www.github.com/wovo/godafoss
+# author   : Wouter van Ooijen (wouter@voti.nl) 2023
+# license  : MIT license, see license variable in the __init__.py
+#
+# This file is part of the Godafoss perhiperal interface library.
+#
+# This file contains the (abstract) display class
+# and some helper classes.
+#
+# ===========================================================================
+
+from godafoss.gf_tools import *
+from godafoss.gf_invertible import *
+from godafoss.gf_xy import *
+
+
+# ===========================================================================
+
+class display( invertible ):
+    """
+    a drawing area (abstract class)
+
+    A display is a rectanglular area of items (for instance pixels)
+    that can be written using the write() method.
+    The size attribute is the number of locations in x and y direction.
+    A display can be buffered, in which case a flush() call is required
+    to effectuate the write() calls.
+    
+    Displays can be added (+ operator) to create a display that 
+    writes to all constituent displays.
+    """
+
+    def __init__(
+        self,
+        size: xy
+    ):
+        self.size = size
+        self._modified = False
+        invertible.__init__( self )
+
+    # =======================================================================
+    
+    def __add__( self, other: display ) -> display:
+        return _display_two( this, other )
+        
+
+    # =======================================================================
+
+    def write_one_implementation(
+        self,
+        location: xy,
+        item
+    ) -> None:
+        """
+        implementation of writing a single item
+
+        A concrete display implementation must implement this method.
+
+        This method should not be called directly,
+        only via the write_one() method (NVI pattern).
+        When called by the write_one() method,
+        the location has been checked to be inside the display,
+        and the item has been checked to be not None.
+
+        A display might be buffered: the write_one_implementation() calls 
+        might write to a buffer, which is written to the actual
+        display by the flush() method.
+        """
+        
+        raise NotImplementedError
+
+    # =======================================================================
+
+    def write_one(
+        self,
+        location: xy,
+        item
+    ) -> None:
+        """
+        write a single item
+
+        This method checks whether the location is inside the display
+        and the item not None.
+        If so, the write_one_implementation() method is called.
+
+        A display might be buffered: the write_one() calls might
+        be effectuated only when the flush() method is called.
+        """     
+        
+        if (
+            ( item is not None )
+            and within( location.x, 0, item.size.x - 1 )
+            and within( location.y, 0, item.size.y - 1 )
+        ):
+            self._modified = True
+            item.draw_implementation( location, item )
+
+    # =======================================================================
+
+    def clear( self, *args, **kwargs ) -> None:
+        """
+        clear the display
+
+        This method clears the display by writing either the default
+        (whatever that might be) or the specified value to all locations.
+
+        A display might be buffered: a clear() call might
+        be effectuated only when the flush() method is called.        
+        """      
+                
+        for x in range( 0, self.size.x ):
+            for y in range( 0, self.size.y ):
+                self.draw_implementation( xy( x, y ), *args, **kwargs )
+
+    # =======================================================================
+
+    def flush_implementation( self ) -> None:
+        """
+        effectuate what was written to the display
+
+        A concrete display implementation can implement this method.
+        The default implementation does nothing.
+        """ 
+        
+        pass 
+
+
+    # =======================================================================
+
+    def flush( self ) -> None:
+        """
+        effectuate what was written to the display
+
+        This methnod calls the flush_implementation() method
+        when something was written to the display after the 
+        last flush() call.
+        """ 
+        
+        if self._modified:
+            self.flush_implementation()
+            self._modified = False
+
+
+    # =======================================================================
+
+    def inverted( self ) -> "display":
+        """
+        inverse of the display
+
+        This method returns a display that inverts the effect 
+        of write_one() calls.
+        """
+        
+        return _display_inverted( self )
+        
+    # =======================================================================
+
+    def part( self, start: xy, size: xy ):
+        """
+        part of the display
+
+        This method returns a display that is part of te original display.
+        """
+        
+        return _sheet_part( self, start, size )        
+
+
+    # =======================================================================
+
+    def extend( self, start: xy, size: xy ):
+        """
+        extension of the display
+
+        This method returns a display that extends the original display.
+        """
+        
+        return _canvas_part( self, start, size )        
+
+
+# ===========================================================================   
+
+class _display_two( display ):
+    """
+    """
+    
+    def __init__( self, a: display, b: display ):
+        self._a = a
+        self._b = b
+        display.__init__( xy( 
+            max( self.size.x, other.size.x ),
+            max( self.size.y, other.size.y ) 
+        )
+        
+    def write_one_implementation(
+        self,
+        location: xy,
+        item
+    ) -> None:
+        self._subject.write_one( location, item )
+        self._subject.write_one( location, item )
+        
+    def flush_implementation( self ) -> None:
+        self._subject.flush()       
+        self._subject.flush()       
+        
+        
+# ===========================================================================   
+
+class _display_inverted( display ):
+    """
+    """
+    
+    def __init__( self, subject ):
+        self._subject = subject
+        display.__init__( self.size )
+        
+    def write_one_implementation(
+        self,
+        location: xy,
+        item
+    ) -> None:
+        self._subject.write_one_implementation( 
+            location, 
+            not item if isinstance( item, bool) else - item
+        )
+        
+    def flush_implementation( self ) -> None:
+        self._subject.flush()       
+        self._subject.flush()         
+        
+        
+# ===========================================================================   
+
+class _display_part( display ):
+    """
+    """
+    
+    def __init__( self, main, start, size ):
+        self.main = main
+        self.start = start
+        display.__init__( self, size )
+
+    def write_one_implementation( self, location: xy, item ):
+        self.main.draw_pixel( self.start + location, item )       
+        
+        
+# ===========================================================================
+    

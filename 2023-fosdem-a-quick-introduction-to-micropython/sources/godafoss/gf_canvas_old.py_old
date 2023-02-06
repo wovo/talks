@@ -1,0 +1,290 @@
+# ===========================================================================
+#
+# file     : gf_canvas.py
+# part of  : godafoss micropython library
+# url      : https://www.github.com/wovo/godafoss
+# author   : Wouter van Ooijen (wouter@voti.nl) 2023
+# license  : MIT license, see license variable in the __init__.py
+#
+# This file is part of the Godafoss perhiperal interface library.
+#
+# This file contains the (abstract) canvas class.
+#
+# ===========================================================================
+
+from godafoss.gf_tools import *
+from godafoss.gf_invertible import *
+from godafoss.gf_xy import *
+from godafoss.gf_color import *
+
+
+# ===========================================================================
+
+class canvas( invertible ):
+    """
+    color graphic drawing area
+
+    A canvas is a rectanglular area of color pixels.
+    A canvas has a size, which is the number of pixels in
+    the x and y directions.
+    The top-left pixel is at xy( 0, 0 ), the bottom-right pixel is
+    at xy(sheet.size.x - i, sheet.size.y - 1).    
+    
+    
+    The draw method draws (paints) a single pixel.
+
+    A canvas has a size and (default) background
+    and foreground colors.
+    When no foreground is specified, it is the
+    negative (complement) of the background.
+    """
+
+    def __init__(
+        self,
+        size: xy,
+        background: color
+    ):
+        self.size = size
+        self.background = background
+        invertible.__init__( self )
+
+    # =======================================================================
+
+    def write_pixel(
+        self,
+        location: xy,
+        ink: color | None = None
+    ) -> None:
+        """
+        write a pixel
+        
+        :param location: (:class:`~godafoss.xy`)
+            the location of the pixel that is to be written 
+        
+        :param ink: (None, bool)
+            the value to be written to the pixel        
+
+        This method writes a single pixel.
+
+        A sheet might be buffered: the writing of pixels might
+        be effectuated only when the flush() method is called.
+        
+        $macro_start sheet_write_pixel
+        write a pixel
+        
+        :param location: (:class:`~godafoss.xy`)
+            the location of the pixel that is to be written 
+        
+        :param ink: (None, bool)
+            the value to be written to the pixel
+            
+        When the location is within the sheet, 
+        and the ink parameter is not None, 
+        the ink is written to the pixel.
+        The default value of ink (True) writes the sheet
+        foreground, False writes the sheets background.
+        
+        Writes are buffered: a flush call is required
+        to write changed pixels to the screen.
+        $macro_end
+        """
+        
+        raise NotImplementedError
+
+            
+    # =======================================================================
+    
+    def within( 
+        self, 
+        location: xy 
+    ):
+        """
+        check if the location is within the canvas
+        
+        :param location: (:class:`~godafoss.xy`)
+            the location coordinates to be checked     
+        
+        This method returns True iff the location
+        is within the canvas.
+        """
+        
+        return (
+            within( location.x, 0, self.size.x - 1 )
+            and within( location.y, 0, self.size.y - 1 ) )            
+
+    # =======================================================================
+
+    def flush( 
+        self, 
+        forced: bool = False 
+    ) -> None:
+        """
+        effectuate the changes made to the canvas
+
+        A concrete canvas implementation must implement this method.
+
+        Call this method to effectuate changes made to the canvas.
+        """
+        raise NotImplementedError
+
+    # =======================================================================
+
+    def clear_implementation( self, ink: color ) -> None:
+        """
+        implementation of clearing the canvas
+
+        A concrete canvas implementation can implement this method if
+        a better (faster) way is available than looping over all pixels.
+        """
+        for x in range( 0, self.size.x ):
+            for y in range( 0, self.size.y ):
+                self.write_pixel( xy( x, y ), ink )
+
+    # =======================================================================
+
+    def clear(
+            self,
+            ink: [ bool, color ] = True
+    ) -> None:
+        """
+        clear the canvas
+
+        This method writes the indicated color to all pixels of
+        the canvas.
+        When no color is specified, the background of the canvas is used.
+        """
+        if isinstance( ink, bool ):
+            
+        for x in range( 0, self.size.x ):
+            for y in range( 0, self.size.y ):
+                self.write_pixel( xy( x, y ), ink )        
+        
+        self.clear_implementation( first_not_none( ink, self.background ))
+
+    # =======================================================================
+    
+    def draw( self, location:xy, thing ):
+        thing.draw( self, location )
+
+    # =======================================================================
+
+    def folded( self, n: int ):
+        return _folded_canvas( self, n )
+
+    # =======================================================================
+
+    def part( self, start: xy, size: xy ):
+        return _canvas_part( self, start, size )
+
+    # =======================================================================
+
+    def color_transformed( self, color_transform ):
+        return _canvas_transformed(
+            self,
+            color_transform = color_transform
+        )
+
+    # =======================================================================
+
+    def inverted( self ) -> "canvas":
+        """
+
+        """
+        return _canvas_transformed(
+            self,
+            color_transform =
+                lambda ink: not ink
+        )
+
+    # =======================================================================
+
+    def location_transformed( self, location_transform ):
+        return _canvas_transformed(
+            self,
+            location_transform = location_transform
+        )
+
+    # =======================================================================
+
+    def x_mirrored( self ):
+        return _canvas_transformed(
+            self,
+            location_transform =
+                lambda location: xy(
+                    ( self.size.x - 1 ) - location.x,
+                    location.y
+                )
+        )
+
+    # =======================================================================
+
+    def y_mirrored( self ):
+        return _canvas_transformed(
+            self,
+            location_transform =
+                lambda location: xy(
+                    location.x,
+                    ( self.size.y - 1 ) - location.y,
+                )
+        )
+
+    # =======================================================================
+
+    def xy_mirrored( self ):
+        return _canvas_transformed(
+            self,
+            location_transform =
+                lambda location: xy(
+                    location.y,
+                    location.x
+                )
+        )
+
+    # =======================================================================
+
+    def demo( self ):
+        import godafoss.gf_canvas_demo
+        godafoss.gf_canvas_demo.canvas_demo( self )
+
+
+# ===========================================================================   
+
+class _canvas_folded( sheet ):
+    """
+    helper class that folds a canvas
+    """
+    
+    def __init__( self, subject: sheet, n: int ):
+        self._subject = subject
+        self._n = n
+        sheet.__init__( self, xy( subject.size.x // n, subject.size.y * n ) )
+        
+    def write_pixel(
+        self,
+        location: xy,
+        ink: bool | None = True       
+    ) -> None:
+        if self.within( location ):
+            self._subject.write_pixel( 
+                xy(
+                    location.x + self.size.x * ( location.y // self._subject.size.y ),
+                    location.y % self._subject.size.y
+                ),
+                ink 
+            )  
+        
+    def flush(
+        self,
+        forced: bool = False
+    ) -> None:
+        self._subject.flush( forced )
+        
+    def clear(
+        self,
+        ink: [ bool, color ] = True
+    ) -> None:
+        self._subject.clear( ink )       
+
+
+# ===========================================================================   
+
