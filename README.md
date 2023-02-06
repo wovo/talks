@@ -1,11 +1,13 @@
 My talks with the materials and links.
 
-* 2023 FOSDEM Brussels: A quick introduction to MicroPython
+* **A quick introduction to MicroPython**
+  2023 FOSDEM Brussels
   (same title, updated content)
   [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython)
   [event](https://fosdem.org/2023/schedule/event/python_micropython_intro/)
 
-* 2022 PyData Eindhoven: A quick introduction to MicroPython
+* **A quick introduction to MicroPython**
+  2022 PyData Eindhoven
   [material](./2022-11-25-pydata-eindhoven--a-quick-introduction-to-micropython)
   [event](https://www.meetup.com/pydata-eindhoven/events/288643458)
   
