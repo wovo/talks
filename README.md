@@ -12,7 +12,7 @@ Talks with the same title can have updated content.
   not recorded
   
 * **C++/Rust: Learning from Each Other** -
-  (online, with Lotte Steenbrink) -
+  online, with Lotte Steenbrink -
   [2021 MUC++](https://www.meetup.com/mucplusplus/events/281231257/) -
   sheets lost -
   [youtube](https://www.youtube.com/watch?v=0SHkxoCWfXU)
@@ -28,7 +28,7 @@ Talks with the same title can have updated content.
   [youtube](https://youtube.com/watch?v=jbeyQe6RVo8)
   
 * **We stopped teaching C** -
-  (with Jorn Bunk) -
+  with Jorn Bunk -
   2018 Meeting Embedded Berlin -
   [material](./2018-meeting-embedded-berlin--we-stopped-teaching-c) -  
   [youtube](https://www.youtube.com/watch?v=VZUTJ2UNXxI)
