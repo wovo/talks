@@ -2,27 +2,27 @@ My talks and related activities, with the materials and links.
 Talks with the same title can have updated content.
 
 * **A quick introduction to MicroPython** 
-  2023 FOSDEM Brussels
-  [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython)
-  [event](https://fosdem.org/2023/schedule/event/python_micropython_intro/)
+  - 2023 FOSDEM Brussels
+  - [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython)
+  - [event](https://fosdem.org/2023/schedule/event/python_micropython_intro/)
 
 * **A quick introduction to MicroPython**
-  2022 PyData Eindhoven
-  [material](./2022-11-25-pydata-eindhoven--a-quick-introduction-to-micropython)
-  [event](https://www.meetup.com/pydata-eindhoven/events/288643458)
+  - 2022 PyData Eindhoven
+  - [material](./2022-11-25-pydata-eindhoven--a-quick-introduction-to-micropython)
+  - [event](https://www.meetup.com/pydata-eindhoven/events/288643458)
   
 * **C++/Rust: Learning from Each Other**
-  (online, with Lotte Steenbrink)
-  2021 MUC++
-  [event](https://www.meetup.com/mucplusplus/events/281231257/)
-  (sheets lost?)
-  [youtube](https://www.youtube.com/watch?v=0SHkxoCWfXU)
+  - (online, with Lotte Steenbrink)
+  - 2021 MUC++
+  - [event](https://www.meetup.com/mucplusplus/events/281231257/)
+  - (sheets lost?)
+  - [youtube](https://www.youtube.com/watch?v=0SHkxoCWfXU)
   
 * **Better embedded library interfaces with modern C++**
   2019 ACCU Bristol
-  [event)[https://accu.org/video/spring-2019-day-2/ooijen/]
-  [material](./2019-accu--embedded-interfacing-with-cpp)  
-  [youtube](https://www.youtube.com/watch?v=ArRuPzN7JXs) 
+  - [event](https://accu.org/video/spring-2019-day-2/ooijen/)
+  - [material](./2019-accu--embedded-interfacing-with-cpp)  
+  - [youtube](https://www.youtube.com/watch?v=ArRuPzN7JXs) 
    
 * **Embedded C++ For Embedded C Programmers**
   2019 emBO++ Bochum
