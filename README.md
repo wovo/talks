@@ -1,10 +1,10 @@
 My talks and related activities, with the materials and links.
 Talks with the same title can have updated content.
 
-* **A quick introduction to MicroPython** 
-  - 2023 FOSDEM Brussels
-  - [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython)
-  - [event](https://fosdem.org/2023/schedule/event/python_micropython_intro/)
+* **A quick introduction to MicroPython** -
+  2023 FOSDEM Brussels -
+  [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython) -
+  [event](https://fosdem.org/2023/schedule/event/python_micropython_intro/)
 
 * **A quick introduction to MicroPython**
   - 2022 PyData Eindhoven
