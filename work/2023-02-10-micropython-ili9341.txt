@@ -1,0 +1,84 @@
+ili9341
+
+line buffer 
+240 * 2 = 480 bytes each call
+320 calls  
+10 MHz 1.51 ms
+20 MHz 1.45
+makes sense: 240*480*8/20M = 0.06 s
+without the write_command calls 1.33 ms
++ avoid the * 1.30 s
++ twice the pixel retrieve 1.7 s
+once, no write, avoid *, micropython.native 812 ms
+(viper doesn't work, maybe works on the smaller section)
+still native, once, explicit loop instead of range 814 ms
+
+python, range, avoid *, write_cmd( buffer = ), line buffer, 20 Mhz
+1413 ms
+breaks down: 
+    pixel retrieve line 400 ms
+    write_command 120 ms
+    
+python, 20 MHz    
+for b in self._buffer:
+   self.write_command( None, buffer = self._pixels[ b ] )
+1.58 ms
+self._spi.write( self._pixels[ b ] ) 687 ms  
+idem native 680 ms
+zonder native, array index out of the loop  670 ms
+idem, 2 spi calls 1318 ms -> spi calls now take all time
+make the spi calls transfer 2 x the data
+   longer _pixels 821 ms (same as -> 10 MHz)
+   p + p 995 ms
+   
+30 MHz 687 ms
+20 MHz 691 ms
+10 MHz 820 ms
+
+(er wordt iets te veel geschreven - waarom??)
+
+accummulate byte array
+1 1214
+2 753
+4 (64) 690 (varies a lot) 
+
+idem single allocation
+1 (16) 970
+2 713
+4 544
+8 464
+16 444
+
+This is promising, continue with the 16
+base 445
+- 2 x spi_write -> 550
+- 2 x copy -> 541
+- @native -> 398
+- separate _send@native 398
+- some const 311 !
+- viper crashes
+- python 355, native 312
+- native, copy twice 490
+- native, spi twice 417
+
+
+native, ms, copy to temp
+1: 779
+2: 529
+4: 382
+8: 318
+16: 311 -> avoid lookup 301
+32: 361 (??)
+128: 771
+    - copy twice 14482
+    - spi twice 839
+    
+explicit copy loop, python
+8: 2391  
+native 1478
+
+280 ms
+
+
+
+

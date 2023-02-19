@@ -1,0 +1,24 @@
+talks:
+- verbose writing style
+- compilation takes temporay RAM depending on file size (?) -> split
+- also because transfer takes time
+- not all parts are needed -> trampolines (46 bytes?)
+- pre-compile speeds up loading
+- freezing frees up RAM (run from flash)
+- spi-ram is SLOOOW
+- I2C is slow (contrast SD1306)
+- hardware SPI can be much faster than software SPI (and I2C)
+- use a fast & large RAM target for development (teensy 4.1)
+- watch out where the latest version of your code is!
+
+- use powered hub for eg. displays, or watch current consumption
+
+- wish list: const for class objects
+
+- effect of @native??
+
+- thonny: I can't get used to upload/download direction
+
+original pyboard (STM32F411) only 47k flash sfree 39k RAM
+but .... flash keeps being visible ias USB mass storage!
+add pyboard to table
