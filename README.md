@@ -1,6 +1,11 @@
 My talks and related activities, with the materials and links.
 Talks with the same title can have updated content.
 
+* **More LEDs! (A quick introduction to MicroPython, RP2040 PIO, HUB)** -
+  [2023 emBO++ Bochum](https://embo.io/) -
+  [material](./2023-03-23-embo-bochum-more-leds) -
+  (recording not available yet)
+
 * **A quick introduction to MicroPython** -
   [2023 FOSDEM Brussels](https://fosdem.org/2023/schedule/event/python_micropython_intro/) -
   [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython) -
