@@ -1,0 +1,11 @@
+materials
+
+pi pico h 6.50
+usb C cable <bring>
+leds, resistors -
+wires 3.00
+breadboard 4.00
+potentiometer -
+servo motor 3.25
+pcb switch 0.20
+push switches -

@@ -10,7 +10,7 @@ Talks with the same title can have updated content.
   [2023 FOSDEM Brussels](https://fosdem.org/2023/schedule/event/python_micropython_intro/) -
   [material](./2023-02-05-fosdem--a-quick-introduction-to-micropython) -
   [recording](https://fosdem.org/2023/schedule/event/python_micropython_intro/) -
-  parts re-used for a 
+  parts re-used in a 
   [talk by by Doug Blanding](https://github.com/dblanding/micro-circuit-python-talk)
 
 * **A quick introduction to MicroPython** -
